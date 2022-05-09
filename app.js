@@ -21,7 +21,7 @@ app.use("/", indexRouter);
 app.use("/users", usersRouter);
 
 conn.sync({ force: true }).then(() => {
-  server.listen(1500, () => {
+  app.listen(1500, () => {
     console.log("%s listening at 1500"); // eslint-disable-line no-console
   });
 });
