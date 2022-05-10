@@ -8,34 +8,30 @@ module.exports = async (req, res, next) => {
 
   // Si no nos han proporcionado un token lanzamos un error
   if (!token) {
-    return next({ status: 403, message: "Token not found" });
+    return res.status(403).json({ status: 403, message: "Token not found" });
   }
 
-  if (
-    typeof token !== "undefined" &&
-    token.toLowerCase().startsWith("bearer")
-  ) {
-    try {
-      const tokenValidate = token.split(" ")[1];
-      req.token = tokenValidate;
-      const decoded = jwt.verify(tokenValidate, JWT_SECRET);
-
+  try {
+      const decoded = jwt.verify(token, JWT_SECRET);
       let user = await User.findByPk(decoded.user.id);
-
-      // ningún usuario contiene ese correo
-      if (!user) return next({ status: 400, message: "Invalid credentials" });
-
-      req.user = user.dataValues;
-
-      //Si la cuenta está desabilitada
-
-      next();
+      if (decoded.user.id === user.dataValues.id) {
+  
+        // ningún usuario contiene ese correo
+        if (!user) return next({ status: 400, message: "No hay un usuario registrado con esa contraseña" });
+  
+        req.user = user.dataValues;
+  
+        next();
+      } else {
+        return res.status(403).json({
+          ok: false,
+          mensaje: 'Token inválido'
+        })
+      }
     } catch (error) {
-      // console.log(error, token);
-      res.sendStatus(403);
+      res.sendStatus(403).json({
+        status: 403,
+        mensaje: 'Token inválido'
+      });
     }
-  } else {
-    // console.log('not token');
-    res.sendStatus(403);
-  }
 };
