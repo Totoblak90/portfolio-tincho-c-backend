@@ -19,7 +19,7 @@ const login = async (req, res, next) => {
     let user = await User.findOne({ where: { username } });
 
     if (!user) {
-      return res.json({
+      return res.status(400).json({
         status: 400,
         message: "Este usuario no existe",
       });
