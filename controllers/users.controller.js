@@ -94,7 +94,7 @@ const resetPassword = async (req, res, next) => {
     } catch (error) {
         res.status(500).json({
             message: 'Error al intentar conectar a la base de datos. Por favor, ponte en contacto con el administrador',
-            error: err,
+            error,
             status: 500
         })
     }
