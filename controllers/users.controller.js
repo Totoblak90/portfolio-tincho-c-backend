@@ -17,9 +17,9 @@ const login = async (req, res, next) => {
   try {
 
     let user = await User.findOne({ where: { username } });
-    
+
     if (!user) {
-      return next({
+      return res.status(400).json({
         status: 400,
         message: "Este usuario no existe",
       });
@@ -31,7 +31,7 @@ const login = async (req, res, next) => {
     );
 
     if (!passwordfinal) {
-      return next({
+      return res.status(400).json({
         status: 400,
         message: "Contraseña invalida",
       });
@@ -49,12 +49,16 @@ const login = async (req, res, next) => {
       },
       (err, token) => {
         if (err) throw err;
-        return res.json({ token });
+        return res.status(200).json({ token });
       }
     );
 
   } catch (err) {
-    next(err);
+    res.status(500).json({
+        message: 'Error al intentar conectar a la base de datos. Por favor, ponte en contacto con el administrador',
+        error: err,
+        status: 500
+    })
   }
 };
 
@@ -73,7 +77,7 @@ const resetPassword = async (req, res, next) => {
   
       const user = await User.findOne({ where: { username } });
       if (!user) {
-          return next({
+          return res.status(400).json({
             status: 400,
             message: "Este usuario no existe",
           });
@@ -82,7 +86,7 @@ const resetPassword = async (req, res, next) => {
       const isMatch = await bcrypt.compare(oldPassword, user.dataValues.password);
   
       if (!isMatch) {
-        return next({ status: 400, message: "Contraseña incorrecta" });
+        return res.status(400).json({ status: 400, message: "Contraseña incorrecta" });
       }
   
       await User.update(
@@ -95,7 +99,11 @@ const resetPassword = async (req, res, next) => {
       })
   
     } catch (error) {
-      next(error);
+        res.status(500).json({
+            message: 'Error al intentar conectar a la base de datos. Por favor, ponte en contacto con el administrador',
+            error: err,
+            status: 500
+        })
     }
 }
 
