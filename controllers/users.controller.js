@@ -1,4 +1,4 @@
-const User = require("../Db/index.js");
+const { User } = require("../Db/index.js");
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = process.env;
 const bcrypt = require("bcrypt");
@@ -15,8 +15,9 @@ const login = async (req, res, next) => {
   }
 
   try {
-    let user = await User.findOne({ where: { username } });
 
+    let user = await User.findOne({ where: { username } });
+    
     if (!user) {
       return next({
         status: 400,
@@ -53,7 +54,6 @@ const login = async (req, res, next) => {
     );
 
   } catch (err) {
-    // console.log(err)
     next(err);
   }
 };
