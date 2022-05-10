@@ -6,6 +6,7 @@ var cors = require("cors");
 const { conn } = require("./Db/index.js");
 var usersRouter = require("./routes/users");
 const res = require("express/lib/response");
+const initDB = require("./uttilities/initDB")
 
 var app = express();
 
@@ -30,7 +31,9 @@ app.get("*", (req, res) => {
 
 conn.sync({ force: true }).then(() => {
   app.listen(1500, () => {
-    console.log("%s listening at 1500"); // eslint-disable-line no-console
+    console.log("%s listening at 1500");
+     // eslint-disable-line no-console
+     await initDB();
   });
 });
 
