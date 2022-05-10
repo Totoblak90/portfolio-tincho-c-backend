@@ -30,9 +30,8 @@ app.get("*", (req, res) => {
 });
 
 conn.sync({ force: true }).then(() => {
-  app.listen(1500, () => {
+  app.listen(1500, async () => {
     console.log("%s listening at 1500");
-     // eslint-disable-line no-console
      await initDB();
   });
 });
