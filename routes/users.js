@@ -2,9 +2,10 @@ var express = require('express');
 var router = express.Router();
 
 // Controllers
-const userController = require('../controllers/users.controller')
+const { login, resetPassword } = require('../controllers/users.controller');
 
 /* GET users listing. */
-router.get('/', userController.list);
+router.post('/', login);
+router.post('/', resetPassword);
 
 module.exports = router;
