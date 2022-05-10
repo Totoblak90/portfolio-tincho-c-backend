@@ -64,16 +64,9 @@ const login = async (req, res, next) => {
 
 const resetPassword = async (req, res, next) => {
 
-    const { newPassword, oldPassword, username, token } = req.body;
+    const { newPassword, oldPassword, username } = req.body;
   
     try {
-
-      if (token === 'jsontokenguardado') {
-          return next({
-              status: 400,
-              message: 'Token inválido'
-          })
-      }
   
       const user = await User.findOne({ where: { username } });
       if (!user) {
