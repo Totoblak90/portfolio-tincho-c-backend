@@ -1,4 +1,6 @@
-const { DataTypes } = require("sequelize");
+const {
+  DataTypes
+} = require("sequelize");
 
 module.exports = (sequelize) => {
   const AssetProyecto = sequelize.define("asset-proyecto", {
@@ -9,8 +11,8 @@ module.exports = (sequelize) => {
       primaryKey: true,
     },
     name: {
-        type: DataTypes.STRING,
-        allowNull: true
+      type: DataTypes.STRING,
+      allowNull: true
     },
   });
 };
