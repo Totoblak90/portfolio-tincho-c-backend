@@ -4,7 +4,6 @@ const { JWT_SECRET } = process.env;
 const bcrypt = require("bcrypt");
 
 const login = async (req, res, next) => {
-
   const { username, password } = req.body;
 
   if (!username || !password) {
@@ -15,7 +14,6 @@ const login = async (req, res, next) => {
   }
 
   try {
-
     let user = await User.findOne({ where: { username } });
 
     if (!user) {
@@ -52,55 +50,52 @@ const login = async (req, res, next) => {
         return res.status(200).json({ token });
       }
     );
-
   } catch (err) {
     res.status(500).json({
-        message: 'Error al intentar conectar a la base de datos. Por favor, ponte en contacto con el administrador',
-        error: err,
-        status: 500
-    })
+      message:
+        "Error al intentar conectar a la base de datos. Por favor, ponte en contacto con el administrador",
+      error: err,
+      status: 500,
+    });
   }
 };
 
 const resetPassword = async (req, res, next) => {
+  const { newPassword, oldPassword, username } = req.body;
 
-    const { newPassword, oldPassword, username } = req.body;
-  
-    try {
-  
-      const user = await User.findOne({ where: { username } });
-      if (!user) {
-          return res.status(400).json({
-            status: 400,
-            message: "Este usuario no existe",
-          });
-        }
-  
-      const isMatch = await bcrypt.compare(oldPassword, user.dataValues.password);
-  
-      if (!isMatch) {
-        return res.status(400).json({ status: 400, message: "Contraseña incorrecta" });
-      }
-  
-      await User.update(
-        { password: newPassword },
-        { where: { username } }
-      );
-  
-      res.status(200).json({
-          message: 'Contraseña cambiada con éxito'
-      })
-  
-    } catch (error) {
-        res.status(500).json({
-            message: 'Error al intentar conectar a la base de datos. Por favor, ponte en contacto con el administrador',
-            error,
-            status: 500
-        })
+  try {
+    const user = await User.findOne({ where: { username } });
+    if (!user) {
+      return res.status(400).json({
+        status: 400,
+        message: "Este usuario no existe",
+      });
     }
-}
+
+    const isMatch = await bcrypt.compare(oldPassword, user.dataValues.password);
+
+    if (!isMatch) {
+      return res
+        .status(400)
+        .json({ status: 400, message: "Contraseña incorrecta" });
+    }
+
+    await User.update({ password: newPassword }, { where: { username } });
+
+    res.status(200).json({
+      message: "Contraseña cambiada con éxito",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message:
+        "Error al intentar conectar a la base de datos. Por favor, ponte en contacto con el administrador",
+      error,
+      status: 500,
+    });
+  }
+};
 
 module.exports = {
   login,
-  resetPassword
+  resetPassword,
 };
