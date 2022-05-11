@@ -1,6 +1,13 @@
+// Importaciones
+
 const {
   Galeria
 } = require("../Db/index.js");
+const fs = require('fs');
+const path = require('path');
+
+
+// Controllers
 
 const getPhotos = async (req, res) => {
   let photos = await Galeria.findAll();
@@ -38,7 +45,45 @@ const savePhoto = async (req, res) => {
 
 }
 
+const deletePhoto = async (req, res) => {
+
+  const {
+    filename
+  } = req.body
+
+  if (!filename) {
+    return res.status(404).json({
+      message: 'Foto no encontrada'
+    })
+  }
+
+  // Borro el archivo físico de la carpeta
+  fs.unlinkSync(
+    `public/gallery/${filename}`
+  );
+
+  // Borro el archivo de la base de datos
+
+  const deletePhoto = await Galeria.destroy({
+    where: {
+      filename
+    }
+  });
+
+  if (deletePhoto) {
+    return res.status(200).json({
+      message: 'Foto eliminada correctamente'
+    })
+  } else {
+    return res.status(400).json({
+      message: 'No se pudo eliminar la foto'
+    })
+  }
+
+}
+
 module.exports = {
   getPhotos,
-  savePhoto
+  savePhoto,
+  deletePhoto
 };

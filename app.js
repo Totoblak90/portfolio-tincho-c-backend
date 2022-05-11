@@ -34,7 +34,7 @@ app.get("*", (req, res) => {
 });
 
 conn.sync({
-  force: true
+  force: false
 }).then(() => {
   app.listen(1500, async () => {
     console.log("%s listening at 1500");

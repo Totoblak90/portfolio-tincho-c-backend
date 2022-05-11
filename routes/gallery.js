@@ -6,7 +6,8 @@ var path = require('path')
 const multer = require("multer");
 const {
     getPhotos,
-    savePhoto
+    savePhoto,
+    deletePhoto
 } = require("../controllers/galeria.controller");
 
 const auth = require("../uttilities/middlewareAuth");
@@ -45,6 +46,8 @@ const upload = multer({
 
 router.get("/", getPhotos);
 
-router.post("/save", auth, upload.single("image"), savePhoto)
+router.post("/save", auth, upload.single("image"), savePhoto);
+
+router.delete("/delete", auth, deletePhoto)
 
 module.exports = router;
