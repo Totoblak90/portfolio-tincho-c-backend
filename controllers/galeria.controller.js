@@ -4,8 +4,6 @@ const {
   Galeria
 } = require("../Db/index.js");
 const fs = require('fs');
-const path = require('path');
-
 
 // Controllers
 
