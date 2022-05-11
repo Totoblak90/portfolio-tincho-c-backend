@@ -19,4 +19,5 @@ module.exports = (sequelize) => {
       allowNull: true
     }
   });
+
 };

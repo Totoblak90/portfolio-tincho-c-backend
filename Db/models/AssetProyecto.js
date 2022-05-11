@@ -3,7 +3,7 @@ const {
 } = require("sequelize");
 
 module.exports = (sequelize) => {
-  const AssetProyecto = sequelize.define("asset-proyecto", {
+  const AssetProyecto = sequelize.define("assetProyecto", {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
@@ -15,4 +15,11 @@ module.exports = (sequelize) => {
       allowNull: true
     },
   });
+
+  AssetProyecto.associate = (models) => {
+    AssetProyecto.belongsTo(models.Proyecto, {
+      as: "Proyecto",
+      foreignKey: "proyecto_id",
+    });
+  };
 };

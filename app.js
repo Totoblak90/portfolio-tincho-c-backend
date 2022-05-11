@@ -8,6 +8,7 @@ const {
 } = require("./Db/index.js");
 var usersRouter = require("./routes/users");
 const galeryRouter = require("./routes/gallery");
+const proyectRouter = require("./routes/proyect");
 const res = require("express/lib/response");
 const initDB = require("./uttilities/initDB");
 
@@ -24,6 +25,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api/users", usersRouter);
 app.use("/api/gallery", galeryRouter);
+app.use("/api/projects", proyectRouter);
 
 // Se implementa para que en el resto de las rutas que no son /api la app tome el ruteo de React
 app.get("/", (req, res) => {
@@ -34,7 +36,7 @@ app.get("*", (req, res) => {
 });
 
 conn.sync({
-  force: false
+  force: true
 }).then(() => {
   app.listen(1500, async () => {
     console.log("%s listening at 1500");
