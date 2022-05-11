@@ -5,8 +5,9 @@ var logger = require("morgan");
 var cors = require("cors");
 const { conn } = require("./Db/index.js");
 var usersRouter = require("./routes/users");
+const galeryRouter = require("./routes/galery");
 const res = require("express/lib/response");
-const initDB = require("./uttilities/initDB")
+const initDB = require("./uttilities/initDB");
 
 var app = express();
 
@@ -18,8 +19,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api/users", usersRouter);
-
-
+app.use("/api/galery", galeryRouter);
 
 // Se implementa para que en el resto de las rutas que no son /api la app tome el ruteo de React
 app.get("/", (req, res) => {
@@ -32,7 +32,7 @@ app.get("*", (req, res) => {
 conn.sync({ force: true }).then(() => {
   app.listen(1500, async () => {
     console.log("%s listening at 1500");
-     await initDB();
+    await initDB();
   });
 });
 
