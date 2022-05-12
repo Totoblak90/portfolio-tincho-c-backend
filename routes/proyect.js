@@ -24,9 +24,9 @@ const storage = multer.diskStorage({
     return cb(
       null,
       "Proyect" +
-        "_" +
-        Date.now() +
-        path.extname(file.originalname.toLowerCase())
+      "_" +
+      Date.now() +
+      path.extname(file.originalname.toLowerCase())
     );
   },
 });
@@ -39,11 +39,13 @@ const upload = multer({
 // Controllers
 const {
   getProyects,
+  getProyectById,
   saveProyect,
   deleteProyect,
 } = require("../controllers/proyecto.controller");
 
 router.get("/", getProyects);
+router.get("/:id", getProyectById);
 router.post("/saveProyect", auth, upload.single("image"), saveProyect);
 router.delete("/deleteProyect:id", auth, deleteProyect)
 

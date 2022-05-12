@@ -1,18 +1,47 @@
-const { Proyecto } = require("../Db/index.js");
+const {
+  Proyecto
+} = require("../Db/index.js");
 
 const fs = require("fs");
 
 const getProyects = async (req, res) => {
   let proyects = await Proyecto.findAll();
 
+
   if (!proyects || proyects.length === 0) {
-    res.status(400).send("No se encuentran proyectos");
+    return res.status(400).send("No se encuentran proyectos");
   }
-  res.status(200).json(proyects);
+
+  const response = proyects.map(proyecto => {
+    return {
+      id: proyecto.dataValues.id,
+      name: proyecto.dataValues.name,
+      image: proyecto.dataValues.image,
+    }
+  })
+
+  return res.status(200).json(response);
+};
+
+const getProyectById = async (req, res) => {
+  const {
+    id
+  } = req.params;
+
+  let proyect = await Proyecto.findByPk(id);
+
+  if (!proyect) {
+    res.status(400).send("No se encontró el proyecto");
+  }
+  res.status(200).json(proyect);
 };
 
 const saveProyect = async (req, res) => {
-  let { name } = req.body;
+  let {
+    name,
+    proyect_date,
+    description
+  } = req.body;
 
   if (!name) {
     return res.status(400).send("No se pudo crear proyecto");
@@ -26,6 +55,8 @@ const saveProyect = async (req, res) => {
   const nuevoProyecto = await Proyecto.create({
     name,
     image,
+    proyect_date,
+    description
   });
 
   if (nuevoProyecto) {
@@ -38,8 +69,12 @@ const saveProyect = async (req, res) => {
 };
 
 const deleteProyect = async (req, res) => {
-  const { id } = req.params;
-  const { image } = req.body;
+  const {
+    id
+  } = req.params;
+  const {
+    image
+  } = req.body;
 
   if (!id) {
     return res.status(404).json({
@@ -71,6 +106,7 @@ const deleteProyect = async (req, res) => {
 
 module.exports = {
   getProyects,
+  getProyectById,
   saveProyect,
   deleteProyect,
 };
