@@ -68,6 +68,62 @@ const saveProyect = async (req, res) => {
   }
 };
 
+const editProyect = async (req, res) => {
+  const {
+    id
+  } = req.params;
+
+  const {
+    oldFilename,
+    name,
+    description
+  } = req.body;
+
+  const {
+    filename
+  } = req.file;
+
+  const proyecto = await Proyecto.findByPk(id);
+
+  if (proyecto) {
+    try {
+
+      // Actualizo el proyecto
+      const editoProyecto = await Proyecto.update({
+        name,
+        description,
+        image: filename
+      }, {
+        where: {
+          id
+        }
+      });
+
+      if (editoProyecto) {
+        // Borro la foto vieja
+        fs.unlinkSync(`../public/proyect/${oldFilename}`)
+
+        return res.status(200).json({
+          mensaje: 'Proyecto actualizado correctamente'
+        })
+
+      } else {
+        return res.status(500).json({
+          mensaje: 'No se pudo actualizar el proyecto, por favor intentalo nuevamente',
+          error
+        })
+      }
+
+    } catch (error) {
+      return res.status(500).json({
+        mensaje: 'No se pudo actualizar el proyecto, por favor intentalo nuevamente',
+        error
+      })
+    }
+  }
+
+}
+
 const deleteProyect = async (req, res) => {
   const {
     id
@@ -108,5 +164,6 @@ module.exports = {
   getProyects,
   getProyectById,
   saveProyect,
+  editProyect,
   deleteProyect,
 };

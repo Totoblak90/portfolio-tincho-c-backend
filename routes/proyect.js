@@ -42,11 +42,13 @@ const {
   getProyectById,
   saveProyect,
   deleteProyect,
+  editProyect
 } = require("../controllers/proyecto.controller");
 
 router.get("/", getProyects);
 router.get("/:id", getProyectById);
 router.post("/saveProyect", auth, upload.single("image"), saveProyect);
+router.put("/editProyect/:id", auth, upload.single("image"), editProyect);
 router.delete("/deleteProyect:id", auth, deleteProyect)
 
 module.exports = router;
