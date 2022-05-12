@@ -31,9 +31,9 @@ const getProyectById = async (req, res) => {
   let proyect = await Proyecto.findByPk(id);
 
   if (!proyect) {
-    res.status(400).send("No se encontró el proyecto");
+    return res.status(400).send("No se encontró el proyecto");
   }
-  res.status(200).json(proyect);
+  return res.status(200).json(proyect);
 };
 
 const saveProyect = async (req, res) => {
