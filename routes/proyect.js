@@ -40,9 +40,11 @@ const upload = multer({
 const {
   getProyects,
   saveProyect,
+  deleteProyect,
 } = require("../controllers/proyecto.controller");
 
 router.get("/", getProyects);
 router.post("/saveProyect", auth, upload.single("image"), saveProyect);
+router.delete("/deleteProyect:id", auth, deleteProyect)
 
 module.exports = router;
