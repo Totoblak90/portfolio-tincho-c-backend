@@ -20,4 +20,11 @@ module.exports = (sequelize) => {
     }
   });
 
+  Proyecto.associate = (models) => {
+    Proyecto.hasMany(models.AssetProyecto, {
+      as: "AssetProyecto",
+      foreignKey: "proyecto_id",
+    });
+  };
+
 };

@@ -1,6 +1,5 @@
 const {
   Proyecto,
-  AssetProyecto
 } = require("../Db/index.js");
 
 const fs = require("fs");
@@ -19,7 +18,6 @@ const getProyects = async (req, res) => {
 const saveProyect = async (req, res) => {
   let {
     name,
-    assetsProyecto
   } = req.body;
 
   if (!name) {
@@ -36,45 +34,13 @@ const saveProyect = async (req, res) => {
     image
   });
 
-
-  if (assetsProyecto.length) {
-
-    assetsProyecto = assetsProyecto.map((a, i) => {
-      return {
-        ...assetsProyecto[i],
-        proyecto_id: nuevoProyecto.dataValues.id
-      }
-    })
-
-    const agregoAssetsAlProyecto = await Promise.all(
-      assetsProyecto.map(async (asset) => {
-        return await AssetProyecto.findOrCreate({
-          where: {
-            name: asset.name
-          }
-        })
-      })
-    )
-
-    if (agregoAssetsAlProyecto) {
-      return res.status(200).json({
-        message: "Proyecto con sus imágenes guardado correctamente"
-      })
-    } else {
-      return res.status(404).json({
-        message: "Error al querer guardar el proyecto, intentalo nuevamente"
-      })
-    }
+  if (nuevoProyecto) {
+    return res.status(200).json({
+      message: "Proyecto creado"
+    });
   } else {
-    if (nuevoProyecto) {
-      return res.status(200).json({
-        message: "Proyecto creado"
-      });
-    } else {
-      return res.status(400).send("No se pudo crear proyecto");
-    }
+    return res.status(400).send("No se pudo crear proyecto");
   }
-
 
 };
 
