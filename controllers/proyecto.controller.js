@@ -1,32 +1,27 @@
-const {
-  Proyecto
-} = require("../Db/index.js");
+const { Proyecto } = require("../Db/index.js");
 
 const fs = require("fs");
 
 const getProyects = async (req, res) => {
   let proyects = await Proyecto.findAll();
 
-
   if (!proyects || proyects.length === 0) {
     return res.status(400).send("No se encuentran proyectos");
   }
 
-  const response = proyects.map(proyecto => {
+  const response = proyects.map((proyecto) => {
     return {
       id: proyecto.dataValues.id,
       name: proyecto.dataValues.name,
       image: proyecto.dataValues.image,
-    }
-  })
+    };
+  });
 
   return res.status(200).json(response);
 };
 
 const getProyectById = async (req, res) => {
-  const {
-    id
-  } = req.params;
+  const { id } = req.params;
 
   let proyect = await Proyecto.findByPk(id);
 
@@ -37,11 +32,7 @@ const getProyectById = async (req, res) => {
 };
 
 const saveProyect = async (req, res) => {
-  let {
-    name,
-    proyect_date,
-    description
-  } = req.body;
+  let { name, proyect_date, description } = req.body;
 
   if (!name) {
     return res.status(400).send("No se pudo crear proyecto");
@@ -56,7 +47,7 @@ const saveProyect = async (req, res) => {
     name,
     image,
     proyect_date,
-    description
+    description,
   });
 
   if (nuevoProyecto) {
@@ -69,68 +60,57 @@ const saveProyect = async (req, res) => {
 };
 
 const editProyect = async (req, res) => {
-  const {
-    id
-  } = req.params;
+  const { id } = req.params;
 
-  const {
-    oldFilename,
-    name,
-    description
-  } = req.body;
+  const { oldFilename, name, description } = req.body;
 
-  const {
-    filename
-  } = req.file;
+  const { filename } = req.file;
 
   const proyecto = await Proyecto.findByPk(id);
 
   if (proyecto) {
     try {
-
       // Actualizo el proyecto
-      const editoProyecto = await Proyecto.update({
-        name,
-        description,
-        image: filename
-      }, {
-        where: {
-          id
+      const editoProyecto = await Proyecto.update(
+        {
+          name,
+          description,
+          image: filename,
+        },
+        {
+          where: {
+            id,
+          },
         }
-      });
+      );
 
       if (editoProyecto) {
         // Borro la foto vieja
-        fs.unlinkSync(`public/proyect/${oldFilename}`)
+        fs.unlinkSync(`public/proyect/${oldFilename}`);
 
         return res.status(200).json({
-          mensaje: 'Proyecto actualizado correctamente'
-        })
-
+          mensaje: "Proyecto actualizado correctamente",
+        });
       } else {
         return res.status(500).json({
-          mensaje: 'No se pudo actualizar el proyecto, por favor intentalo nuevamente',
-          error
-        })
+          mensaje:
+            "No se pudo actualizar el proyecto, por favor intentalo nuevamente",
+          error,
+        });
       }
-
     } catch (error) {
       return res.status(500).json({
-        mensaje: 'No se pudo actualizar el proyecto, por favor intentalo nuevamente',
-        error
-      })
+        mensaje:
+          "No se pudo actualizar el proyecto, por favor intentalo nuevamente",
+        error,
+      });
     }
   }
-
-}
+};
 
 const deleteProyect = async (req, res) => {
-  const {
-    id
-  } = req.params;
-  const {
-    image
-  } = req.body;
+  const { id } = req.params;
+  const { image } = req.body;
 
   if (!id) {
     return res.status(404).json({

@@ -17,13 +17,13 @@ const fileFilter = (req, file, cb) => {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    let dirImage = path.join("public", "proyect");
+    let dirImage = path.join("public", "assets-proyectos");
     return cb(null, dirImage);
   },
   filename: function (req, file, cb) {
     return cb(
       null,
-      "Proyect" +
+      "Assets" +
         "_" +
         Date.now() +
         path.extname(file.originalname.toLowerCase())
@@ -38,17 +38,11 @@ const upload = multer({
 
 // Controllers
 const {
-  getProyects,
-  getProyectById,
-  saveProyect,
-  deleteProyect,
-  editProyect,
-} = require("../controllers/proyecto.controller");
+  getAssets,
+  saveAsset,
+} = require("../controllers/assetsProyect.controller");
 
-router.get("/", getProyects);
-router.get("/:id", getProyectById);
-router.post("/saveProyect", auth, upload.single("image"), saveProyect);
-router.put("/editProyect/:id", auth, upload.single("image"), editProyect);
-router.delete("/deleteProyect:id", auth, deleteProyect);
+router.get("/:id", getAssets);
+router.post("/saveAsset/:id", auth, upload.single("image"), saveAsset);
 
 module.exports = router;
