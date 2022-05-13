@@ -10,8 +10,8 @@ const {
     deletePhoto
 } = require("../controllers/galeria.controller");
 
-const auth = require("../uttilities/middlewareAuth");
-const fileFilterMiddleware = require("../uttilities/file-extension");
+const auth = require("../utilities/middlewareAuth");
+const fileFilterMiddleware = require("../utilities/file-extension");
 let counter = 1;
 
 // Multer

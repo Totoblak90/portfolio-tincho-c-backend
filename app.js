@@ -11,7 +11,7 @@ const galeryRouter = require("./routes/gallery");
 const proyectRouter = require("./routes/proyect");
 const assetRouter = require("./routes/assetProyects");
 const res = require("express/lib/response");
-const initDB = require("./uttilities/initDB");
+const initDB = require("./utilities/initDB");
 
 var app = express();
 
