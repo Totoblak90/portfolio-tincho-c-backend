@@ -101,7 +101,7 @@ const editProyect = async (req, res) => {
 
       if (editoProyecto) {
         // Borro la foto vieja
-        fs.unlinkSync(`../public/proyect/${oldFilename}`)
+        fs.unlinkSync(`public/proyect/${oldFilename}`)
 
         return res.status(200).json({
           mensaje: 'Proyecto actualizado correctamente'
