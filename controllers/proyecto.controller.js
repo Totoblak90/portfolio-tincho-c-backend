@@ -1,5 +1,6 @@
 const {
-  Proyecto
+  Proyecto,
+  AssetProyecto
 } = require("../Db/index.js");
 
 const fs = require("fs");
@@ -103,7 +104,9 @@ const editProyect = async (req, res) => {
 
       if (editoProyecto) {
         // Borro la foto vieja
-        fs.unlinkSync(`public/proyect/${oldFilename}`);
+        if (fs.existsSync(`public/proyect/${oldFilename}`)) {
+          fs.unlinkSync(`public/proyect/${oldFilename}`);
+        }
 
         return res.status(200).json({
           mensaje: "Proyecto actualizado correctamente",
@@ -137,10 +140,13 @@ const deleteProyect = async (req, res) => {
     });
   }
 
-  // Borro el archivo físico de la carpeta
-  fs.unlinkSync(`public/proyect/${image}`);
-
   // Borro el archivo de la base de datos
+
+  const proyectoConAsociacion = await Proyecto.findByPk(id, {
+    include: [{
+      association: "AssetProyecto",
+    }],
+  });
 
   const deleteProyectPhoto = await Proyecto.destroy({
     where: {
@@ -149,10 +155,39 @@ const deleteProyect = async (req, res) => {
   });
 
   if (deleteProyectPhoto) {
+    // Borro el archivo físico de la carpeta
+    if (fs.existsSync(`public/proyect/${image}`)) {
+      fs.unlinkSync(`public/proyect/${image}`);
+    }
+
+    if (proyectoConAsociacion.dataValues.AssetProyecto && proyectoConAsociacion.dataValues.AssetProyecto.length > 0) {
+      const promesas = proyectoConAsociacion.dataValues.AssetProyecto.map(asset => AssetProyecto.destroy({
+        where: {
+          id: asset.id
+        }
+      }))
+      const borroAssetDb = await Promise.all(promesas);
+
+      if (borroAssetDb && borroAssetDb.length > 0) {
+        proyectoConAsociacion.dataValues.AssetProyecto.forEach(asset => {
+          if (fs.existsSync(`public/assets-proyectos/${asset.filename}`)) {
+            fs.unlinkSync(`public/assets-proyectos/${asset.filename}`)
+          }
+        })
+      } else {
+        return res.status(200).json({
+          message: "Proyecto eliminado correctamente pero no sus imágenes",
+        });
+      }
+
+    }
+
     return res.status(200).json({
-      message: "Proyecto eliminado correctamente",
+      message: "Proyecto eliminado correctamente con sus imágenes correspondientes",
     });
+
   } else {
+
     return res.status(400).json({
       message: "No se pudo eliminar el proyecto",
     });
