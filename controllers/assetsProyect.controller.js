@@ -78,7 +78,9 @@ const deleteAssets = async (req, res) => {
 
   if (borroAssetsDB && borroAssetsDB.length > 0) {
     assets.forEach(asset => {
-      fs.unlinkSync(`public/assets-proyectos/${asset.filename}`)
+      if (fs.existsSync(`public/assets-proyectos/${asset.filename}`)) {
+        fs.unlinkSync(`public/assets-proyectos/${asset.filename}`)
+      }
     })
 
     return res.status(200).send("Imagenes borradas correctamente")

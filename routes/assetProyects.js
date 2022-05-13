@@ -3,6 +3,7 @@ var router = express.Router();
 const auth = require("../uttilities/middlewareAuth");
 var path = require("path");
 const multer = require("multer");
+let counter = 1;
 
 // Multer
 
@@ -21,11 +22,15 @@ const storage = multer.diskStorage({
     return cb(null, dirImage);
   },
   filename: function (req, file, cb) {
+    counter++
+
     return cb(
       null,
       "Assets" +
       "_" +
       Date.now() +
+      "_" +
+      counter +
       path.extname(file.originalname.toLowerCase())
     );
   },
@@ -45,5 +50,6 @@ const {
 
 router.get("/:id", getAssets);
 router.post("/saveAsset/:id", auth, upload.array("image"), saveAsset);
-router.delete("/deleteAssets", auth, deleteAssets)
+router.delete("/deleteAssets", auth, deleteAssets);
+
 module.exports = router;

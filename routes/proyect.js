@@ -3,7 +3,7 @@ var router = express.Router();
 const auth = require("../uttilities/middlewareAuth");
 var path = require("path");
 const multer = require("multer");
-
+let counter = 1;
 // Multer
 
 const fileFilter = (req, file, cb) => {
@@ -21,9 +21,12 @@ const storage = multer.diskStorage({
     return cb(null, dirImage);
   },
   filename: function (req, file, cb) {
+    counter++
     return cb(
       null,
       "Proyect" +
+      "_" +
+      counter +
       "_" +
       Date.now() +
       path.extname(file.originalname.toLowerCase())

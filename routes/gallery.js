@@ -11,7 +11,7 @@ const {
 } = require("../controllers/galeria.controller");
 
 const auth = require("../uttilities/middlewareAuth");
-
+let counter = 1;
 
 // Multer
 
@@ -30,9 +30,10 @@ const storage = multer.diskStorage({
         return cb(null, dirImage);
     },
     filename: function (req, file, cb) {
+        counter++
         return cb(
             null,
-            "Gallery" + "_" + Date.now() + path.extname(file.originalname.toLowerCase())
+            "Gallery" + "_" + Date.now() + counter + "_" + path.extname(file.originalname.toLowerCase())
         );
     },
 });

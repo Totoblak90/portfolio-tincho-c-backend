@@ -1,6 +1,8 @@
 // Importaciones
 
-const { Galeria } = require("../Db/index.js");
+const {
+  Galeria
+} = require("../Db/index.js");
 const fs = require("fs");
 
 // Controllers
@@ -20,7 +22,9 @@ const savePhoto = async (req, res) => {
     });
   }
 
-  const { filename } = req.file;
+  const {
+    filename
+  } = req.file;
 
   const saveFile = await Galeria.create({
     filename,
@@ -38,7 +42,9 @@ const savePhoto = async (req, res) => {
 };
 
 const deletePhoto = async (req, res) => {
-  const { filename } = req.body;
+  const {
+    filename
+  } = req.body;
 
   if (!filename) {
     return res.status(404).json({
@@ -47,7 +53,9 @@ const deletePhoto = async (req, res) => {
   }
 
   // Borro el archivo físico de la carpeta
-  fs.unlinkSync(`public/gallery/${filename}`);
+  if (fs.existsSync(`public/gallery/${filename}`)) {
+    fs.unlinkSync(`public/gallery/${filename}`);
+  }
 
   // Borro el archivo de la base de datos
 
