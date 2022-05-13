@@ -43,6 +43,6 @@ const {
 } = require("../controllers/assetsProyect.controller");
 
 router.get("/:id", getAssets);
-router.post("/saveAsset/:id", auth, upload.single("image"), saveAsset);
+router.post("/saveAsset/:id", auth, upload.array("image"), saveAsset);
 
 module.exports = router;

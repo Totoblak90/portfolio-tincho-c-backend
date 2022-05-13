@@ -22,11 +22,23 @@ const getAssets = async (req, res) => {
 
 const saveAsset = async (req, res) => {
   const { id } = req.params;
-  let filename;
-  if (req.file) {
-    filename = req.file.filename;
+  let filenames;
+  if (req.files && req.files.length === 0) {
+    filenames = req.files;
   }
-  const nuevo
+  const nuevoAsset = filenames.map((file) =>
+    AssetProyecto.create({
+      proyecto_id: id,
+      filename: file.filename,
+    })
+  );
+  const assetCreado = await Promise.all(nuevoAsset);
+  console.log(assetCreado);
+  if (assetCreado) {
+    return res.status(200).send("Tus imagenes se guardaron correctamente");
+  } else {
+    return res.status(400).send("No se pudieron guardar las imagenes");
+  }
 };
 
 module.exports = {
