@@ -11,7 +11,7 @@ const {
 } = require("../controllers/galeria.controller");
 
 const auth = require("../uttilities/middlewareAuth");
-const fileFilterMiddleware = require("../validation-middlewares/file-extension");
+const fileFilterMiddleware = require("../uttilities/file-extension");
 let counter = 1;
 
 // Multer

@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 const auth = require("../uttilities/middlewareAuth");
+const fileFilterMiddleware = require("../uttilities/file-extension");
 var path = require("path");
 const multer = require("multer");
 let counter = 1;
@@ -50,8 +51,8 @@ const {
 
 router.get("/", getProyects);
 router.get("/:id", getProyectById);
-router.post("/saveProyect", auth, upload.single("image"), saveProyect);
-router.put("/editProyect/:id", auth, upload.single("image"), editProyect);
+router.post("/saveProyect", fileFilterMiddleware, auth, upload.single("image"), saveProyect);
+router.put("/editProyect/:id", fileFilterMiddleware, auth, upload.single("image"), editProyect);
 router.delete("/deleteProyect/:id", auth, deleteProyect);
 
 module.exports = router;

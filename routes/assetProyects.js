@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 const auth = require("../uttilities/middlewareAuth");
+const fileFilterMiddleware = require("../uttilities/file-extension");
 var path = require("path");
 const multer = require("multer");
 let counter = 1;
@@ -49,7 +50,7 @@ const {
 } = require("../controllers/assetsProyect.controller");
 
 router.get("/:id", getAssets);
-router.post("/saveAsset/:id", auth, upload.array("image"), saveAsset);
+router.post("/saveAsset/:id", auth, fileFilterMiddleware, upload.array("image"), saveAsset);
 router.delete("/deleteAssets", auth, deleteAssets);
 
 module.exports = router;

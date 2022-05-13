@@ -1,7 +1,9 @@
 const {
   AssetProyecto
 } = require("../Db/index.js");
-
+const {
+  validationResult
+} = require("express-validator");
 const fs = require("fs");
 
 const getAssets = async (req, res) => {
@@ -25,31 +27,42 @@ const getAssets = async (req, res) => {
 };
 
 const saveAsset = async (req, res) => {
-  const {
-    id
-  } = req.params;
-  let filenames;
+  let errors = validationResult(req);
 
-  if (req.files && req.files.length > 0) {
-    filenames = req.files;
+  if (errors.isEmpty()) {
+    const {
+      id
+    } = req.params;
+    let filenames;
 
-    const nuevoAsset = filenames.map((file) =>
-      AssetProyecto.create({
-        proyecto_id: id,
-        filename: file.filename,
-      })
-    );
+    if (req.files && req.files.length > 0) {
+      filenames = req.files;
 
-    const assetCreado = await Promise.all(nuevoAsset);
+      const nuevoAsset = filenames.map((file) =>
+        AssetProyecto.create({
+          proyecto_id: id,
+          filename: file.filename,
+        })
+      );
 
-    if (assetCreado && assetCreado.length > 0) {
-      return res.status(200).send("Tus imagenes se guardaron correctamente");
+      const assetCreado = await Promise.all(nuevoAsset);
+
+      if (assetCreado && assetCreado.length > 0) {
+        return res.status(200).send("Tus imagenes se guardaron correctamente");
+      } else {
+        return res.status(400).send("No se pudieron guardar las imagenes");
+      }
+
     } else {
-      return res.status(400).send("No se pudieron guardar las imagenes");
+      return res.status(400).send("No se subió ninguna imágen");
     }
-
   } else {
-    return res.status(400).send("No se subió ninguna imágen");
+    return res.status(400).json({
+      data: {
+        errors: errors.errors,
+        body: req.body,
+      },
+    });
   }
 
 
