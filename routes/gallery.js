@@ -11,6 +11,7 @@ const {
 } = require("../controllers/galeria.controller");
 
 const auth = require("../uttilities/middlewareAuth");
+const fileFilterMiddleware = require("../validation-middlewares/file-extension");
 let counter = 1;
 
 // Multer
@@ -47,7 +48,7 @@ const upload = multer({
 
 router.get("/", getPhotos);
 
-router.post("/save", auth, upload.single("image"), savePhoto);
+router.post("/save", auth, fileFilterMiddleware, upload.single("image"), savePhoto);
 
 router.delete("/delete", auth, deletePhoto)
 
