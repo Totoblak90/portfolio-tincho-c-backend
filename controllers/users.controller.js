@@ -1,10 +1,17 @@
-const { User } = require("../Db/index.js");
+const {
+  User
+} = require("../Db/index.js");
 const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = process.env;
+const {
+  JWT_SECRET
+} = process.env;
 const bcrypt = require("bcrypt");
 
 const login = async (req, res, next) => {
-  const { username, password } = req.body;
+  const {
+    username,
+    password
+  } = req.body;
 
   if (!username || !password) {
     return next({
@@ -14,7 +21,11 @@ const login = async (req, res, next) => {
   }
 
   try {
-    let user = await User.findOne({ where: { username } });
+    let user = await User.findOne({
+      where: {
+        username
+      }
+    });
 
     if (!user) {
       return res.status(400).json({
@@ -36,24 +47,26 @@ const login = async (req, res, next) => {
     }
 
     const payload = {
-      user: { id: user.id },
+      user: {
+        id: user.id
+      },
     };
 
     jwt.sign(
       payload,
-      JWT_SECRET,
-      {
+      JWT_SECRET, {
         expiresIn: "1500d",
       },
       (err, token) => {
         if (err) throw err;
-        return res.status(200).json({ token });
+        return res.status(200).json({
+          token
+        });
       }
     );
   } catch (err) {
     res.status(500).json({
-      message:
-        "Error al intentar conectar a la base de datos. Por favor, ponte en contacto con el administrador",
+      message: "Error al intentar conectar a la base de datos. Por favor, ponte en contacto con el administrador",
       error: err,
       status: 500,
     });
@@ -61,10 +74,23 @@ const login = async (req, res, next) => {
 };
 
 const resetPassword = async (req, res, next) => {
-  const { newPassword, oldPassword, username } = req.body;
+  const {
+    newPassword,
+    oldPassword,
+    username
+  } = req.body;
+
+  if (newPassword === oldPassword) {
+    return res.status(403).send('Las contraseñas deben ser diferentes')
+  }
+
 
   try {
-    const user = await User.findOne({ where: { username } });
+    const user = await User.findOne({
+      where: {
+        username
+      }
+    });
     if (!user) {
       return res.status(400).json({
         status: 400,
@@ -77,18 +103,26 @@ const resetPassword = async (req, res, next) => {
     if (!isMatch) {
       return res
         .status(400)
-        .json({ status: 400, message: "Contraseña incorrecta" });
+        .json({
+          status: 400,
+          message: "Contraseña incorrecta"
+        });
     }
 
-    await User.update({ password: newPassword }, { where: { username } });
+    await User.update({
+      password: newPassword
+    }, {
+      where: {
+        username
+      }
+    });
 
     res.status(200).json({
       message: "Contraseña cambiada con éxito",
     });
   } catch (error) {
     res.status(500).json({
-      message:
-        "Error al intentar conectar a la base de datos. Por favor, ponte en contacto con el administrador",
+      message: "Error al intentar conectar a la base de datos. Por favor, ponte en contacto con el administrador",
       error,
       status: 500,
     });
