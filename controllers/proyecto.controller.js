@@ -1,4 +1,6 @@
-const { Proyecto } = require("../Db/index.js");
+const {
+  Proyecto
+} = require("../Db/index.js");
 
 const fs = require("fs");
 
@@ -21,9 +23,15 @@ const getProyects = async (req, res) => {
 };
 
 const getProyectById = async (req, res) => {
-  const { id } = req.params;
+  const {
+    id
+  } = req.params;
 
-  let proyect = await Proyecto.findByPk(id);
+  let proyect = await Proyecto.findByPk(id, {
+    include: [{
+      association: "AssetProyecto",
+    }],
+  });
 
   if (!proyect) {
     return res.status(400).send("No se encontró el proyecto");
@@ -32,7 +40,11 @@ const getProyectById = async (req, res) => {
 };
 
 const saveProyect = async (req, res) => {
-  let { name, proyect_date, description } = req.body;
+  let {
+    name,
+    proyect_date,
+    description
+  } = req.body;
 
   if (!name) {
     return res.status(400).send("No se pudo crear proyecto");
@@ -60,29 +72,34 @@ const saveProyect = async (req, res) => {
 };
 
 const editProyect = async (req, res) => {
-  const { id } = req.params;
+  const {
+    id
+  } = req.params;
 
-  const { oldFilename, name, description } = req.body;
+  const {
+    oldFilename,
+    name,
+    description
+  } = req.body;
 
-  const { filename } = req.file;
+  const {
+    filename
+  } = req.file;
 
   const proyecto = await Proyecto.findByPk(id);
 
   if (proyecto) {
     try {
       // Actualizo el proyecto
-      const editoProyecto = await Proyecto.update(
-        {
-          name,
-          description,
-          image: filename,
+      const editoProyecto = await Proyecto.update({
+        name,
+        description,
+        image: filename,
+      }, {
+        where: {
+          id,
         },
-        {
-          where: {
-            id,
-          },
-        }
-      );
+      });
 
       if (editoProyecto) {
         // Borro la foto vieja
@@ -93,15 +110,13 @@ const editProyect = async (req, res) => {
         });
       } else {
         return res.status(500).json({
-          mensaje:
-            "No se pudo actualizar el proyecto, por favor intentalo nuevamente",
+          mensaje: "No se pudo actualizar el proyecto, por favor intentalo nuevamente",
           error,
         });
       }
     } catch (error) {
       return res.status(500).json({
-        mensaje:
-          "No se pudo actualizar el proyecto, por favor intentalo nuevamente",
+        mensaje: "No se pudo actualizar el proyecto, por favor intentalo nuevamente",
         error,
       });
     }
@@ -109,8 +124,12 @@ const editProyect = async (req, res) => {
 };
 
 const deleteProyect = async (req, res) => {
-  const { id } = req.params;
-  const { image } = req.body;
+  const {
+    id
+  } = req.params;
+  const {
+    image
+  } = req.body;
 
   if (!id) {
     return res.status(404).json({
