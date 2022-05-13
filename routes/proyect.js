@@ -7,7 +7,7 @@ let counter = 1;
 // Multer
 
 const fileFilter = (req, file, cb) => {
-  const validFormats = [".jpg", ".jpeg", ".png"];
+  const validFormats = [".jpg", ".jpeg", ".png", ".mp4", ".mov"];
   if (!validFormats.includes(path.extname(file.originalname.toLowerCase()))) {
     return cb(null, false);
   } else {
