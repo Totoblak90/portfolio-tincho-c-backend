@@ -3,7 +3,9 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
-const { conn } = require("./Db/index.js");
+const {
+  conn
+} = require("./Db/index.js");
 var usersRouter = require("./routes/users");
 const galeryRouter = require("./routes/gallery");
 const proyectRouter = require("./routes/proyect");
@@ -39,7 +41,7 @@ app.get("*", (req, res) => {
 
 conn
   .sync({
-    force: true,
+    force: false,
   })
   .then(() => {
     app.listen(1500, async () => {
