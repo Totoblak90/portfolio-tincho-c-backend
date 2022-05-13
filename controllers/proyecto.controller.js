@@ -2,9 +2,7 @@ const {
   Proyecto,
   AssetProyecto
 } = require("../Db/index.js");
-const {
-  validationResult
-} = require("express-validator");
+
 const fs = require("fs");
 
 const getProyects = async (req, res) => {
@@ -43,109 +41,88 @@ const getProyectById = async (req, res) => {
 };
 
 const saveProyect = async (req, res) => {
-  let errors = validationResult(req);
-  if (errors.isEmpty()) {
-    let {
-      name,
-      proyect_date,
-      description
-    } = req.body;
+  let {
+    name,
+    proyect_date,
+    description
+  } = req.body;
 
-    if (!name) {
-      return res.status(400).send("No se pudo crear proyecto");
-    }
+  if (!name) {
+    return res.status(400).send("No se pudo crear proyecto");
+  }
 
-    let image;
-    if (req.file) {
-      image = req.file.filename;
-    }
+  let image;
+  if (req.file) {
+    image = req.file.filename;
+  }
 
-    const nuevoProyecto = await Proyecto.create({
-      name,
-      image,
-      proyect_date,
-      description,
+  const nuevoProyecto = await Proyecto.create({
+    name,
+    image,
+    proyect_date,
+    description,
+  });
+
+  if (nuevoProyecto) {
+    return res.status(200).json({
+      message: "Proyecto creado",
     });
-
-    if (nuevoProyecto) {
-      return res.status(200).json({
-        message: "Proyecto creado",
-      });
-    } else {
-      return res.status(400).send("No se pudo crear proyecto");
-    }
   } else {
-    return res.status(400).json({
-      data: {
-        errors: errors.errors,
-        body: req.body,
-      },
-    });
+    return res.status(400).send("No se pudo crear proyecto");
   }
 };
 
 const editProyect = async (req, res) => {
-  let errors = validationResult(req);
+  const {
+    id
+  } = req.params;
 
-  if (errors.isEmpty()) {
-    const {
-      id
-    } = req.params;
+  const {
+    oldFilename,
+    name,
+    description
+  } = req.body;
 
-    const {
-      oldFilename,
-      name,
-      description
-    } = req.body;
+  const {
+    filename
+  } = req.file;
 
-    const {
-      filename
-    } = req.file;
+  const proyecto = await Proyecto.findByPk(id);
 
-    const proyecto = await Proyecto.findByPk(id);
+  if (proyecto) {
+    try {
+      // Actualizo el proyecto
+      const editoProyecto = await Proyecto.update({
+        name,
+        description,
+        image: filename,
+      }, {
+        where: {
+          id,
+        },
+      });
 
-    if (proyecto) {
-      try {
-        // Actualizo el proyecto
-        const editoProyecto = await Proyecto.update({
-          name,
-          description,
-          image: filename,
-        }, {
-          where: {
-            id,
-          },
-        });
-
-        if (editoProyecto) {
-          // Borro la foto vieja
-          if (fs.existsSync(`public/proyect/${oldFilename}`)) {
-            fs.unlinkSync(`public/proyect/${oldFilename}`);
-          }
-
-          return res.status(200).json({
-            mensaje: "Proyecto actualizado correctamente",
-          });
-        } else {
-          return res.status(500).json({
-            mensaje: "No se pudo actualizar el proyecto, por favor intentalo nuevamente",
-            error,
-          });
+      if (editoProyecto) {
+        // Borro la foto vieja
+        if (fs.existsSync(`public/proyect/${oldFilename}`)) {
+          fs.unlinkSync(`public/proyect/${oldFilename}`);
         }
-      } catch (error) {
+
+        return res.status(200).json({
+          mensaje: "Proyecto actualizado correctamente",
+        });
+      } else {
         return res.status(500).json({
           mensaje: "No se pudo actualizar el proyecto, por favor intentalo nuevamente",
           error,
         });
       }
+    } catch (error) {
+      return res.status(500).json({
+        mensaje: "No se pudo actualizar el proyecto, por favor intentalo nuevamente",
+        error,
+      });
     }
-  } else {
-    return res.status(400).json({
-      data: {
-        errors: errors.errors,
-        body: req.body,
-      },
-    });
   }
 };
 
