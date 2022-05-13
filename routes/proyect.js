@@ -24,9 +24,9 @@ const storage = multer.diskStorage({
     return cb(
       null,
       "Proyect" +
-        "_" +
-        Date.now() +
-        path.extname(file.originalname.toLowerCase())
+      "_" +
+      Date.now() +
+      path.extname(file.originalname.toLowerCase())
     );
   },
 });
@@ -49,6 +49,6 @@ router.get("/", getProyects);
 router.get("/:id", getProyectById);
 router.post("/saveProyect", auth, upload.single("image"), saveProyect);
 router.put("/editProyect/:id", auth, upload.single("image"), editProyect);
-router.delete("/deleteProyect:id", auth, deleteProyect);
+router.delete("/deleteProyect/:id", auth, deleteProyect);
 
 module.exports = router;
