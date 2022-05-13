@@ -24,9 +24,9 @@ const storage = multer.diskStorage({
     return cb(
       null,
       "Assets" +
-        "_" +
-        Date.now() +
-        path.extname(file.originalname.toLowerCase())
+      "_" +
+      Date.now() +
+      path.extname(file.originalname.toLowerCase())
     );
   },
 });
@@ -40,9 +40,10 @@ const upload = multer({
 const {
   getAssets,
   saveAsset,
+  deleteAssets
 } = require("../controllers/assetsProyect.controller");
 
 router.get("/:id", getAssets);
 router.post("/saveAsset/:id", auth, upload.array("image"), saveAsset);
-
+router.delete("/deleteAssets", auth, deleteAssets)
 module.exports = router;

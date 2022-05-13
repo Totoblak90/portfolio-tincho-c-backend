@@ -55,7 +55,40 @@ const saveAsset = async (req, res) => {
 
 };
 
+const deleteAssets = async (req, res) => {
+  if (!req.body.assets) {
+    return res.status(500).send("Error al querer borrar las imágenes")
+  }
+
+  const {
+    assets
+  } = req.body;
+
+  if (assets.length < 1) {
+    return res.status(500).send("Error al querer borrar las imágenes")
+  }
+
+  const promises = assets.map(asset => AssetProyecto.destroy({
+    where: {
+      id: asset.id
+    }
+  }))
+
+  const borroAssetsDB = await Promise.all(promises)
+
+  if (borroAssetsDB && borroAssetsDB.length > 0) {
+    assets.forEach(asset => {
+      fs.unlinkSync(`public/assets-proyectos/${asset.filename}`)
+    })
+
+    return res.status(200).send("Imagenes borradas correctamente")
+  } else {
+    return res.status(500).send("No se pudieron borrar las imágenes")
+  }
+}
+
 module.exports = {
   getAssets,
   saveAsset,
+  deleteAssets
 };
