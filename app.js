@@ -45,7 +45,7 @@ conn
   })
   .then(() => {
     app.listen(1500, async () => {
-      console.log("%s listening at 1500");
+      console.log("%s listening at http://localhost:1500");
       await initDB();
     });
   });
