@@ -24,6 +24,8 @@ const getProyects = async (req, res) => {
 };
 
 const getProyectById = async (req, res) => {
+  if (!req.params.id) return res.status(400).json({status: 400, message: "No se envió el id del proyecto"});
+  
   const {
     id
   } = req.params;
@@ -71,19 +73,21 @@ const saveProyect = async (req, res) => {
 };
 
 const editProyect = async (req, res) => {
+  if (!req.params.id) return res.status(400).json({status: 400, message: "No se envió el id del proyecto"});
+
   const {
     id
   } = req.params;
 
-  const {
-    oldFilename,
-    name,
-    description
-  } = req.body;
+  let oldFilename;
+  let name;
+  let description;
+  let filename;
 
-  const {
-    filename
-  } = req.file;
+  if (req.body.oldFilename) oldFilename = req.body.oldFilename;
+  if (req.body.name) name = req.body.name;
+  if (req.body.description) description = req.body.description
+  if (req.file && req.file.filename) filename = req.file.filename;
 
   const proyecto = await Proyecto.findByPk(id);
 
@@ -123,18 +127,15 @@ const editProyect = async (req, res) => {
 };
 
 const deleteProyect = async (req, res) => {
+  if (!req.params.id) return res.status(400).json({status: 400, message: "No se envió el id del proyecto"});
+
   const {
     id
   } = req.params;
+
   const {
     image
   } = req.body;
-
-  if (!id) {
-    return res.status(404).json({
-      message: "Proyecto no encontrado",
-    });
-  }
 
   // Borro el archivo de la base de datos
 
