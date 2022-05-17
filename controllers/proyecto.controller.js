@@ -9,7 +9,7 @@ const getProyects = async (req, res) => {
   let proyects = await Proyecto.findAll();
 
   if (!proyects || proyects.length === 0) {
-    return res.status(400).send("No se encuentran proyectos");
+    return res.status(400).json({status: 400, message: "No se encontró ningún proyecto"})
   }
 
   const response = proyects.map((proyecto) => {
@@ -35,7 +35,7 @@ const getProyectById = async (req, res) => {
   });
 
   if (!proyect) {
-    return res.status(400).send("No se encontró el proyecto");
+    return res.status(400).json({status: 400, message: "No se encontró el proyecto"})
   }
   return res.status(200).json(proyect);
 };
@@ -48,7 +48,7 @@ const saveProyect = async (req, res) => {
   } = req.body;
 
   if (!name) {
-    return res.status(400).send("No se pudo crear proyecto");
+    return res.status(400).json({status: 400, message: "No se pudo crear el proyecto"})
   }
 
   let image;
@@ -64,11 +64,9 @@ const saveProyect = async (req, res) => {
   });
 
   if (nuevoProyecto) {
-    return res.status(200).json({
-      message: "Proyecto creado",
-    });
+    return res.status(200).send("Proyecto creado")
   } else {
-    return res.status(400).send("No se pudo crear proyecto");
+    return res.status(400).json({status: 400, message: "No se pudo crear el proyecto"})
   }
 };
 
@@ -108,19 +106,17 @@ const editProyect = async (req, res) => {
           fs.unlinkSync(`public/proyect/${oldFilename}`);
         }
 
-        return res.status(200).json({
-          mensaje: "Proyecto actualizado correctamente",
-        });
+        return res.status(200).send("Proyecto actualizado correctamente")
       } else {
         return res.status(500).json({
           mensaje: "No se pudo actualizar el proyecto, por favor intentalo nuevamente",
-          error,
+          status: 500
         });
       }
     } catch (error) {
       return res.status(500).json({
         mensaje: "No se pudo actualizar el proyecto, por favor intentalo nuevamente",
-        error,
+        status: 500
       });
     }
   }
