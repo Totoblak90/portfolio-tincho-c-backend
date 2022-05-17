@@ -17,9 +17,10 @@ const getAssets = async (req, res) => {
   if (!assetId || assetId.length === 0) {
     return res
       .status(400)
-      .send(
-        "No se encontraron imagenes pertenecientes al proyecto solicitado."
-      );
+      .json({
+        status: 400,
+        message: "No se encontraron imagenes pertenecientes al proyecto solicitado."
+      });
   }
   res.status(200).json(assetId);
 };
