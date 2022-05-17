@@ -51,8 +51,8 @@ const {
 
 router.get("/", getProyects);
 router.get("/:id", getProyectById);
-router.post("/saveProyect", fileFilterMiddleware, auth, upload.single("image"), saveProyect);
-router.put("/editProyect/:id", fileFilterMiddleware, auth, upload.single("image"), editProyect);
+router.post("/saveProyect", auth, fileFilterMiddleware, upload.single("image"), saveProyect);
+router.put("/editProyect/:id", auth, fileFilterMiddleware, upload.single("image"), editProyect);
 router.delete("/deleteProyect/:id", auth, deleteProyect);
 
 module.exports = router;

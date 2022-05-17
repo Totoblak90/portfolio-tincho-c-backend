@@ -10,6 +10,6 @@ const {
 
 /* GET users listing. */
 router.post("/login", login);
-router.post("/reset-password", auth, resetPassword);
+router.put("/reset-password", auth, resetPassword);
 
 module.exports = router;
