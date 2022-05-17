@@ -44,21 +44,20 @@ const saveAsset = async (req, res) => {
     const assetCreado = await Promise.all(nuevoAsset);
 
     if (assetCreado && assetCreado.length > 0) {
-      return res.status(200).send("Tus imagenes se guardaron correctamente");
+      return res.status(200).send("Tus imagenes se guardaron correctamente")
     } else {
-      return res.status(400).send("No se pudieron guardar las imagenes");
+      return res.status(400).json({status: 400, message: "No se pudieron guardar las imagenes"})
     }
 
   } else {
-    return res.status(400).send("No se subió ninguna imágen");
+    return res.status(400).json({status: 400, message: "No se subió ninguna imágen"})
   }
-
 
 };
 
 const deleteAssets = async (req, res) => {
   if (!req.body.assets) {
-    return res.status(500).send("Error al querer borrar las imágenes")
+    return res.status(500).json({status: 500, message: "Error al querer borrar las imágenes"})
   }
 
   const {
@@ -66,7 +65,7 @@ const deleteAssets = async (req, res) => {
   } = req.body;
 
   if (assets.length < 1) {
-    return res.status(500).send("Error al querer borrar las imágenes")
+    return res.status(500).json({status: 500, message: "Error al querer borrar las imágenes"})
   }
 
   const promises = assets.map(asset => AssetProyecto.destroy({
@@ -86,7 +85,7 @@ const deleteAssets = async (req, res) => {
 
     return res.status(200).send("Imagenes borradas correctamente")
   } else {
-    return res.status(500).send("No se pudieron borrar las imágenes")
+    return res.status(500).json({status: 500, message: "No se pudieron borrar las imágenes"})
   }
 }
 
