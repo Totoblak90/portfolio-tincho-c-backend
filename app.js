@@ -39,8 +39,7 @@ app.get("*", (req, res) => {
   res.sendFile(process.cwd() + "/public/index.html");
 });
 
-conn
-  .sync({
+conn.sync({
     force: false,
   })
   .then(() => {
