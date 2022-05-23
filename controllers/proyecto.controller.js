@@ -17,6 +17,8 @@ const getProyects = async (req, res) => {
       id: proyecto.dataValues.id,
       name: proyecto.dataValues.name,
       image: proyecto.dataValues.image,
+      description: proyecto.dataValues.description,
+      proyect_date: proyecto.dataValues.proyect_date
     };
   });
 
