@@ -12,7 +12,7 @@ const getPhotos = async (req, res) => {
   if (!photos || photos.length === 0) {
     res.status(400).json({status: 400, message: "No se encontró ninguna foto"})
   }
-  res.status(200).json(photos);
+  return res.status(200).json(photos);
 };
 
 const savePhoto = async (req, res) => {
@@ -34,7 +34,7 @@ const savePhoto = async (req, res) => {
   if (saveFile) {
     return res.send("Imagen guardada correctamente")
   } else {
-    res.status(400).json({
+    return res.status(400).json({
       message: "No se pudo guardar la imágen",
       status: 400
     });

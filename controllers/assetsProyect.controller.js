@@ -22,7 +22,7 @@ const getAssets = async (req, res) => {
         message: "No se encontraron imagenes pertenecientes al proyecto solicitado."
       });
   }
-  res.status(200).json(assetId);
+  return res.status(200).json(assetId);
 };
 
 const saveAsset = async (req, res) => {
