@@ -10,7 +10,7 @@ const fs = require("fs");
 const getPhotos = async (req, res) => {
   let photos = await Galeria.findAll();
   if (!photos || photos.length === 0) {
-    res.status(400).json({status: 400, message: "No se encontró ninguna foto"})
+    return res.status(400).json({status: 400, message: "No se encontró ninguna foto"})
   }
   return res.status(200).json(photos);
 };
