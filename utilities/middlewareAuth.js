@@ -32,7 +32,7 @@ module.exports = async (req, res, next) => {
 
     next();
   } catch (error) {
-    res.sendStatus(403).json({
+    return res.sendStatus(403).json({
       status: 403,
       mensaje: 'Token inválido'
     });
