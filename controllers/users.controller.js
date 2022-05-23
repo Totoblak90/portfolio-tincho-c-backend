@@ -55,7 +55,7 @@ const login = async (req, res, next) => {
     jwt.sign(
       payload,
       JWT_SECRET, {
-        expiresIn: "30d",
+        expiresIn: "7d",
       },
       (err, token) => {
         if (err) throw err;

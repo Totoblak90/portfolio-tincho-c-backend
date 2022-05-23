@@ -10,6 +10,7 @@ var usersRouter = require("./routes/users");
 const galeryRouter = require("./routes/gallery");
 const proyectRouter = require("./routes/proyect");
 const assetRouter = require("./routes/assetProyects");
+const verifyTokenRouter = require("./routes/verifyRouter");
 const res = require("express/lib/response");
 const initDB = require("./utilities/initDB");
 
@@ -30,6 +31,7 @@ app.use("/api/users", usersRouter);
 app.use("/api/gallery", galeryRouter);
 app.use("/api/projects", proyectRouter);
 app.use("/api/assets", assetRouter);
+app.use("/api/verify-token", verifyTokenRouter)
 
 // Se implementa para que en el resto de las rutas que no son /api la app tome el ruteo de React
 app.get("/", (req, res) => {
