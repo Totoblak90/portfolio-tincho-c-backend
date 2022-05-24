@@ -10,7 +10,6 @@ const verifyToken = async (req, res) => {
             tokenIsValid = false;
         }
     });
-    console.log(tokenIsValid);
     
     if (tokenIsValid) {
         return res.status(200).send(tokenIsValid)
